@@ -26,4 +26,19 @@ public class EventTest {
         assertThat(event.getName()).isEqualTo(name);
         assertThat(event.getDescription()).isEqualTo(description);
     }
+
+    @Test
+    public void testOffline(){
+        Event event = Event.builder().location("test location").build();
+
+        event.update();
+
+        assertThat(event.isOffline()).isTrue();
+
+        event = Event.builder().build();
+
+        event.update();
+
+        assertThat(event.isOffline()).isFalse();
+    }
 }

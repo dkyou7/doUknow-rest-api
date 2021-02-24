@@ -38,7 +38,7 @@ public class EventControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    @TestDescription("성공")
+    @TestDescription("정상적으로 이벤트 생성")
     public void createEvent() throws Exception {
         EventDto event = EventDto.builder()
                 .name("Spring")
@@ -64,7 +64,9 @@ public class EventControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("id").value(Matchers.not(10L)))
                 .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
-                .andExpect(jsonPath("free").value(Matchers.not(true)));
+                .andExpect(jsonPath("free").value(false))
+                .andExpect(jsonPath("offline").value(true))
+        ;
     }
 
     @Test
