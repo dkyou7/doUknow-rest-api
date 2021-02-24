@@ -1,6 +1,7 @@
 package com.example.dynrestapi.events;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,14 @@ public class EventController {
 
     private final EventRepository eventRepository;
 
+    private final ModelMapper modelMapper;
+
     @PostMapping
-    public ResponseEntity createEvent(@RequestBody Event event) {
+    public ResponseEntity createEvent(@RequestBody EventDto dto) {
+        Event event = modelMapper.map(dto,Event.class);
         Event savedEvent = eventRepository.save(event);
         //EventController의 id에 해당하는 링크를 만들고 링크를 URI로 변환
         URI createdUri = linkTo(EventController.class).slash(savedEvent.getId()).toUri();
-        event.setId(10L);
         // createdUri 헤더를 가지고 201응답을 만듬
         return ResponseEntity.created(createdUri).body(event);
     }

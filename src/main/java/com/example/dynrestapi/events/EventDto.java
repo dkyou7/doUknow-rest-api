@@ -1,22 +1,17 @@
 package com.example.dynrestapi.events;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Getter @Setter
 @Builder
-@EqualsAndHashCode(of = "id")
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class Event {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
-    private Long id;
+@AllArgsConstructor
+public class EventDto {
 
     private String name;
     private String description;
@@ -28,10 +23,4 @@ public class Event {
     private int basePrice;
     private int maxPrice;
     private int limitOfEnrollment;
-    private boolean offline;
-    private boolean free;
-
-    @Enumerated(EnumType.STRING)
-    private EventStatus eventStatus = EventStatus.DRAFT;
-
 }
