@@ -110,20 +110,24 @@ public class EventControllerTest {
     public void createEvent_Bad_Request_Wrong_Input() throws Exception {
         EventDto eventDto = EventDto.builder()
                 .name("Spring")
-                .description("Rest API")
-                .beginEnrollmentDateTime(LocalDateTime.of(2021,2,23,12,12))
-                .closeEnrollmentDateTime(LocalDateTime.of(2021,2,24,12,12))
-                .beginEventDateTime(LocalDateTime.of(2021,2,25,12,12,12))
-                .endEventDateTime(LocalDateTime.of(2021,2,26,12,12,12))
-                .basePrice(300)
+                .description("REST API Development")
+                .beginEnrollmentDateTime(LocalDateTime.of(2010, 11, 23, 14, 23))
+                .closeEnrollmentDateTime(LocalDateTime.of(2018, 11, 21, 14, 23))
+                .beginEventDateTime(LocalDateTime.of(2018, 12, 24, 14, 30))
+                .endEventDateTime(LocalDateTime.of(2018, 12, 6, 14, 30))
+                .basePrice(10000)
                 .maxPrice(200)
                 .limitOfEnrollment(100)
-                .location("강남역 D2 스타트업 팩토리")
+                .location("D Start up Factory")
                 .build();
 
         this.mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.objectMapper.writeValueAsString(eventDto)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andExpect(jsonPath("$[0].objectName").exists())
+                .andExpect(jsonPath("$[0].field").exists())
+                .andExpect(jsonPath("$[0].defaultMessage").exists());
     }
 }
