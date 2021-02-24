@@ -38,6 +38,35 @@ public class EventControllerTest {
 
     @Test
     public void createEvent() throws Exception {
+        EventDto event = EventDto.builder()
+                .name("Spring")
+                .description("Rest API")
+                .beginEnrollmentDateTime(LocalDateTime.of(2021,2,23,12,12))
+                .closeEnrollmentDateTime(LocalDateTime.of(2021,2,24,12,12))
+                .beginEventDateTime(LocalDateTime.of(2021,2,25,12,12,12))
+                .endEventDateTime(LocalDateTime.of(2021,2,26,12,12,12))
+                .basePrice(100)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("강남역 D2 스타트업 팩토리")
+                .build();
+
+        mockMvc.perform(post("/api/events/")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaTypes.HAL_JSON)
+                        .content(objectMapper.writeValueAsString(event)))   // json 형태로 바꿀 수 있다.
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("id").exists())
+                .andExpect(header().exists(HttpHeaders.LOCATION))
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("id").value(Matchers.not(10L)))
+                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
+                .andExpect(jsonPath("free").value(Matchers.not(true)));
+    }
+
+    @Test
+    public void createFalseEvent() throws Exception {
         Event event = Event.builder()
                 .id(10L)
                 .name("Spring")
@@ -55,17 +84,11 @@ public class EventControllerTest {
                 .build();
 
         mockMvc.perform(post("/api/events/")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaTypes.HAL_JSON)
-                        .content(objectMapper.writeValueAsString(event)))   // json 형태로 바꿀 수 있다.
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaTypes.HAL_JSON)
+                .content(objectMapper.writeValueAsString(event)))   // json 형태로 바꿀 수 있다.
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").exists())
-                .andExpect(header().exists(HttpHeaders.LOCATION))
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE,MediaTypes.HAL_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("id").value(Matchers.not(10L)))
-                .andExpect(jsonPath("eventStatus").value(EventStatus.DRAFT.name()))
-                .andExpect(jsonPath("free").value(Matchers.not(true)));
+                .andExpect(status().isBadRequest());
     }
 
 }
