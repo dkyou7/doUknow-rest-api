@@ -1,5 +1,6 @@
 package com.example.dynrestapi.events;
 
+import com.example.dynrestapi.common.TestDescription;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.jni.Local;
 import org.hamcrest.Matchers;
@@ -37,6 +38,7 @@ public class EventControllerTest {
     ObjectMapper objectMapper;
 
     @Test
+    @TestDescription("성공")
     public void createEvent() throws Exception {
         EventDto event = EventDto.builder()
                 .name("Spring")
@@ -66,6 +68,7 @@ public class EventControllerTest {
     }
 
     @Test
+    @TestDescription("입력값 이외의 값이 들어온 경우 에러 발생")
     public void createFalseEvent() throws Exception {
         Event event = Event.builder()
                 .id(10L)
@@ -92,6 +95,7 @@ public class EventControllerTest {
     }
 
     @Test
+    @TestDescription("입력값이 null 일 때")
     public void createEvent_Bad_Request_Empty_Input() throws Exception {
         EventDto eventDto = EventDto.builder().build();
 
@@ -101,4 +105,25 @@ public class EventControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @TestDescription("입력값 로직검증할 때")
+    public void createEvent_Bad_Request_Wrong_Input() throws Exception {
+        EventDto eventDto = EventDto.builder()
+                .name("Spring")
+                .description("Rest API")
+                .beginEnrollmentDateTime(LocalDateTime.of(2021,2,23,12,12))
+                .closeEnrollmentDateTime(LocalDateTime.of(2021,2,24,12,12))
+                .beginEventDateTime(LocalDateTime.of(2021,2,25,12,12,12))
+                .endEventDateTime(LocalDateTime.of(2021,2,26,12,12,12))
+                .basePrice(300)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("강남역 D2 스타트업 팩토리")
+                .build();
+
+        this.mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.objectMapper.writeValueAsString(eventDto)))
+                .andExpect(status().isBadRequest());
+    }
 }
