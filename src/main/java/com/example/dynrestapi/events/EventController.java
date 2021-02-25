@@ -2,6 +2,7 @@ package com.example.dynrestapi.events;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.MediaType;
@@ -50,6 +51,7 @@ public class EventController {
         eventResource.add(linkTo(EventController.class).withRel("query-events"));
         //eventResource.add(selfLinkBuilder.withSelfRel());
         eventResource.add(selfLinkBuilder.withRel("update-event"));
+        eventResource.add(new Link("/docs/index.html#resources-events-create").withRel("profile"));
         // createdUri 헤더를 가지고 201응답을 만듬
         return ResponseEntity.created(createdUri).body(eventResource);
     }

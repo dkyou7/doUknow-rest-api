@@ -8,3 +8,9 @@
 
 ### 계정
 이메일
+
+### 에러 해결한 것
+플러그인 설치 에러
+```http request
+https://www.inflearn.com/questions/17310
+```

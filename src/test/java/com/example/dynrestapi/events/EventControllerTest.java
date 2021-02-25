@@ -83,7 +83,8 @@ public class EventControllerTest {
                         links(  //링크 문서화
                                 linkWithRel("self").description("link to self"),
                                 linkWithRel("query-events").description("link to query events"),
-                                linkWithRel("update-event").description("link to update an existing event")
+                                linkWithRel("update-event").description("link to update an existing event"),
+                                linkWithRel("profile").description("link to update an existing event")
                         ),
                         requestHeaders( //요청 헤더 문서화
                                 headerWithName(HttpHeaders.ACCEPT).description("accept header"),
@@ -123,7 +124,8 @@ public class EventControllerTest {
                                 fieldWithPath("_links.*").ignored(),
                                 fieldWithPath("_links.self.*").ignored(),
                                 fieldWithPath("_links.query-events.*").ignored(),
-                                fieldWithPath("_links.update-event.*").ignored()
+                                fieldWithPath("_links.update-event.*").ignored(),
+                                fieldWithPath("_links.profile.*").ignored()
                         )
                 ));
     }
